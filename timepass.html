@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Internal YKSVSX // Next-Gen Dark Tactical Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Creepster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --matrix-blue: #00f0ff;
+            --dark-void: #010610;
+            --horror-red: #ff0055;
+            --panel-bg: rgba(1, 10, 25, 0.85);
+            --neon-glow: 0 0 15px rgba(0, 240, 255, 0.3);
+            --blood-glow: 0 0 20px rgba(255, 0, 85, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fira Code', monospace;
+        }
+
+        body {
+            background-color: var(--dark-void);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- BACKGROUND TACTICAL LIGHTING --- */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        .scary-overlay {
+            position: fixed;
+            top:0; left:0; width:100vw; height:100vh;
+            box-shadow: inset 0 0 100px rgba(255,0,85,0.25);
+            pointer-events: none;
+            z-index: 999;
+            animation: pulseVignette 4s infinite alternate;
+        }
+
+        @keyframes pulseVignette {
+            0% { box-shadow: inset 0 0 80px rgba(255,0,85,0.2); }
+            100% { box-shadow: inset 0 0 140px rgba(255,0,85,0.4); }
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px var(--horror-red), -2px -2px var(--matrix-blue); transform: skewX(0deg); }
+            10% { transform: skewX(-2deg); }
+            90% { transform: skewX(2deg); }
+            100% { text-shadow: -2px 3px var(--horror-red), 2px -1px var(--matrix-blue); transform: skewX(0deg); }
+        }
+
+        .glitch-header {
+            font-family: 'Creepster', cursive;
+            font-size: 4rem;
+            color: var(--matrix-blue);
+            text-align: center;
+            letter-spacing: 5px;
+            animation: glitch 1s infinite steps(4);
+        }
+
+        /* --- GATEWAY FRAME --- */
+        .gateway-container {
+            max-width: 480px;
+            margin: 10% auto;
+            position: relative;
+            z-index: 1000;
+        }
+
+        /* --- THE CORE SYSTEM PANELS --- */
+        .cyber-panel {
+            background: var(--panel-bg);
+            border: 2px solid rgba(0, 240, 255, 0.2);
+            box-shadow: var(--neon-glow);
+            border-radius: 4px;
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .cyber-panel::before {
+            content: attr(data-label);
+            position: absolute;
+            top: -10px; left: 15px;
+            background: #010610;
+            padding: 0 8px;
+            font-size: 0.7rem;
+            color: var(--matrix-blue);
+            letter-spacing: 1px;
+        }
+
+        .cyber-panel.horror-variant {
+            border-color: rgba(255, 0, 85, 0.3);
+            box-shadow: var(--blood-glow);
+        }
+
+        /* --- INPUT & BUTTON CORE OBJECTS --- */
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0, 240, 255, 0.04);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            color: #ffffff;
+            outline: none;
+            border-radius: 2px;
+            margin-bottom: 15px;
+        }
+        input:focus, select:focus {
+            border-color: var(--matrix-blue);
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+        }
+
+        .cyber-btn {
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid var(--matrix-blue);
+            color: var(--matrix-blue);
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s ease-in-out;
+        }
+        .cyber-btn:hover {
+            background: var(--matrix-blue);
+            color: #000;
+            box-shadow: 0 0 15px var(--matrix-blue);
+        }
+
+        /* --- WORKSTATION MAIN VIEWPORT --- */
+        #workstation-workspace {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            grid-template-rows: 60px 1fr;
+            grid-template-columns: 320px 1fr;
+        }
+
+        /* --- SYSTEM NAV CORNER HEADER --- */
+        .sys-header {
+            grid-row: 1;
+            grid-column: 1 / span 2;
+            background: rgba(1, 6, 16, 0.95);
+            border-bottom: 2px solid var(--matrix-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+        }
+
+        .control-corner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .corner-btn {
+            background: none; border: 1px solid rgba(0,240,255,0.3);
+            color: #fff; padding: 6px 12px; cursor: pointer; border-radius: 2px;
+            font-size: 0.8rem; display: flex; align-items: center; gap: 6px;
+        }
+        .corner-btn:hover {
+            border-color: var(--matrix-blue); color: var(--matrix-blue);
+            box-shadow: 0 0 8px rgba(0,240,255,0.2);
+        }
+
+        /* --- SIDE METRIC CONTROL STRIP --- */
+        .sys-sidebar {
+            grid-row: 2;
+            grid-column: 1;
+            background: rgba(1, 10, 25, 0.9);
+            border-right: 1px solid rgba(0, 240, 255, 0.15);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- DYNAMIC INTERFACE FRAME SYSTEM --- */
+        .sys-mainframe {
+            grid-row: 2;
+            grid-column: 2;
+            padding: 20px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        /* --- FULL DISPLAY WRAPPERS FOR APPS --- */
+        .fullscreen-embedded-app {
+            grid-column: 1 / span 2;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            border: 2px solid var(--matrix-blue);
+            background: #000;
+        }
+
+        .app-iframe-container {
+            flex-grow: 1;
+            width: 100%;
+            border: none;
+            background: #ffffff;
+        }
+
+        /* --- SIMULATED MOBILE PANEL VIEW (TEXTBOOKS) --- */
+        .mobile-device-viewport {
+            width: 100%;
+            height: 520px;
+            border: 8px solid #1e293b;
+            border-radius: 16px;
+            background: #020617;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .mobile-device-viewport iframe {
+            width: 100%; height: 100%; border: none;
+        }
+
+        /* --- TELEMETRY GRAPHICS CONTROLS --- */
+        .telemetry-radar-box {
+            height: 140px;
+            background: #010e1a;
+            border: 1px solid rgba(255,0,85,0.3);
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        .radar-sweep {
+            position: absolute;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, rgba(255,0,85,0.15) 0deg, transparent 90deg);
+            top:-50%; left:-50%;
+            animation: spinRadar 3s linear infinite;
+        }
+        @keyframes spinRadar { 100% { transform: rotate(360deg); } }
+
+        /* --- QUICK SELECTION MATRIX TABS --- */
+        .macro-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .macro-tab {
+            background: rgba(0,240,255,0.05);
+            border: 1px solid rgba(0,240,255,0.15);
+            padding: 8px; color:#fff; text-align:center;
+            cursor:pointer; font-size:0.75rem; text-transform: uppercase;
+        }
+        .macro-tab:hover, .macro-tab.active {
+            background: rgba(0,240,255,0.2); border-color: var(--matrix-blue);
+        }
+
+        .hidden-container { display: none; }
+        .hidden-container.visible { display: block; }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix-bg"></canvas>
+    <div class="scary-overlay"></div>
+
+    <div class="gateway-container" id="system-lockscreen">
+        <h1 class="glitch-header">Ghost Internal</h1>
+        <div style="text-align:center; color:var(--horror-red); font-size:0.8rem; letter-spacing:5px; margin-bottom:30px;">SYSTEM LEVEL V // SECURE DECRYPT</div>
+        
+        <div class="cyber-panel horror-variant" data-label="ENCRYPTED AUTH CORRIDOR">
+            <input type="text" id="vault-user" placeholder="DECRYPT ACCOUNT ALIAS">
+            <input type="password" id="vault-pass" placeholder="SECRET CRYPTO KEYTOKEN">
+            <button class="cyber-btn" onclick="authenticateDecryptSequence()">EXECUTE DECRYPT HANDSHAKE</button>
+            <p id="gate-error" style="color:var(--horror-red); font-size:0.75rem; margin-top:10px; text-align:center; display:none;">✖ IDENTIFICATION FAILURE: SIGNATURE INVALID</p>
+        </div>
+    </div>
+
+    <div id="workstation-workspace">
+        
+        <div class="sys-header">
+            <div>
+                <span style="font-family:'Creepster'; font-size:1.5rem; color:var(--matrix-blue); letter-spacing:2px;">GHOST INTERNAL</span>
+                <span style="font-size:0.65rem; color:var(--horror-red); margin-left:15px; border:1px solid var(--horror-red); padding:2px 5px;">LEVEL_5_CONNECTED</span>
+            </div>
+            
+            <div class="control-corner">
+                <span id="identity-badge" style="font-size:0.8rem; color:var(--matrix-blue); margin-right:10px;"></span>
+                <button class="corner-btn" onclick="routeNavigationState('home')"><i class="fa-solid fa-house"></i> Home</button>
+                <button class="corner-btn" id="dossier-macro-btn" onclick="toggleDossierRecord()"><i class="fa-solid fa-user-secret"></i> Dossier</button>
+                <button class="corner-btn" onclick="terminateSessionSequence()" style="border-color:var(--horror-red); color:var(--horror-red);"><i class="fa-solid fa-power-off"></i> Terminate</button>
+            </div>
+        </div>
+
+        <div class="sys-sidebar">
+            <div class="cyber-panel horror-variant" data-label="LIVE TELEMETRY TRACKER">
+                <button class="cyber-btn" id="geo-btn" style="font-size:0.7rem; padding:6px;" onclick="triggerGeospatialTelemetry()">Link Hardware GPS</button>
+                <div class="telemetry-radar-box" style="margin-top:10px;">
+                    <div class="radar-sweep"></div>
+                    <div id="geo-coordinates-stream" style="position:absolute; bottom:8px; left:8px; font-size:0.7rem; line-height:1.2; color:var(--horror-red);">MAP LOG: UNLINKED_</div>
+                </div>
+            </div>
+
+            <div class="cyber-panel" data-label="SECURE CRYPTO STORAGE">
+                <input type="text" id="secure-note-title" placeholder="Payload Key Anchor">
+                <textarea id="secure-note-body" placeholder="Input non-volatile notes or variables..." rows="3" style="font-size:0.75rem;"></textarea>
+                <input type="file" id="secure-file-vault" style="font-size:0.7rem;">
+                <button class="cyber-btn" style="font-size:0.7rem; padding:6px;" onclick="commitPayloadToLocalMemory()">Store Variable Block</button>
+                <div id="vault-readout" style="margin-top:10px; max-height:120px; overflow-y:auto; font-size:0.7rem; border-top:1px dashed rgba(0,240,255,0.2); padding-top:8px;"></div>
+            </div>
+        </div>
+
+        <div class="sys-mainframe" id="center-display-router">
+            
+            <div id="core-home-module" style="grid-column: 1 / span 2; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                
+                <div class="cyber-panel" data-label="TEXTBOOK ARCHIVE SELECTOR">
+                    <p style="font-size:0.8rem; color:var(--matrix-blue); margin-bottom:12px;">Query Maharashtra State Textbook Repositories securely.</p>
+                    
+                    <div class="macro-grid">
+                        <div class="macro-tab" onclick="setAcademicTier('1-10')">Grades 1-10</div>
+                        <div class="macro-tab" onclick="setAcademicTier('science')">11-12 Sci</div>
+                        <div class="macro-tab" onclick="setAcademicTier('commerce')">11-12 Com</div>
+                        <div class="macro-tab" onclick="setAcademicTier('arts')">11-12 Arts</div>
+                    </div>
+
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="textbook-search-input" placeholder="Enter keyword (e.g., Biology, Algebra)..." style="margin-bottom:0;">
+                        <button class="cyber-btn" onclick="executeTextbookQuery()">Search</button>
+                    </div>
+
+                    <div id="dossier-drawer" class="hidden-container" style="margin-top:15px; border-top:1px solid rgba(255,0,85,0.3); padding-top:10px;">
+                        <h4 style="color:var(--horror-red); font-size:0.85rem; margin-bottom:8px;"><i class="fa-solid fa-folder-open"></i> Decrypted Entity Records:</h4>
+                        <div id="dossier-dump-zone" style="font-size:0.75rem; line-height:1.4;"></div>
+                    </div>
+                </div>
+
+                <div class="cyber-panel" data-label="VIRTUAL SIMULATOR VIEWPORT">
+                    <div class="mobile-device-viewport">
+                        <div id="mobile-fallback-text" style="color:var(--matrix-blue); font-size:0.75rem; padding:40px; text-align:center;">
+                            <i class="fa-solid fa-mobile-screen-button" style="font-size:2rem; margin-bottom:10px; display:block;"></i>
+                            Awaiting secure stream transmission framework instructions...
+                        </div>
+                        <iframe id="mobile-stream-iframe" src=""></iframe>
+                    </div>
+                </div>
+
+                <div class="cyber-panel" data-label="EXTAL APP ROUTER MATRIX" style="grid-column: 1 / span 2;">
+                    <p style="font-size:0.8rem; margin-bottom:15px; color:var(--matrix-blue);">Redirect workspace telemetry viewports directly into full-scale integrated operational layers:</p>
+                    <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:12px;">
+                        <button class="cyber-btn" style="font-size:0.75rem;" onclick="routeApplicationViewport('google')"><i class="fa-brands fa-google"></i> Google</button>
+                        <button class="cyber-btn" style="font-size:0.75rem;" onclick="routeApplicationViewport('youtube')"><i class="fa-brands fa-youtube"></i> YouTube</button>
+                        <button class="cyber-btn" style="font-size:0.75rem;" onclick="routeApplicationViewport('chrome')"><i class="fa-solid fa-compass"></i> Chrome Sandbox</button>
+                        <button class="cyber-btn" style="font-size:0.75rem;" onclick="routeApplicationViewport('instagram')"><i class="fa-brands fa-instagram"></i> Instagram</button>
+                        <button class="cyber-btn" style="font-size:0.75rem;" onclick="routeApplicationViewport('facebook')"><i class="fa-brands fa-facebook"></i> Facebook</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="app-viewport-google" class="fullscreen-embedded-app">
+                <iframe class="app-iframe-container" src="https://www.google.com/webhp?igu=1"></iframe>
+            </div>
+            <div id="app-viewport-youtube" class="fullscreen-embedded-app">
+                <iframe class="app-iframe-container" src="https://www.youtube.com/embed/"></iframe>
+            </div>
+            <div id="app-viewport-chrome" class="fullscreen-embedded-app">
+                <iframe class="app-iframe-container" src="https://www.bing.com"></iframe>
+            </div>
+            <div id="app-viewport-instagram" class="fullscreen-embedded-app">
+                <iframe class="app-iframe-container" src="https://www.instagram.com"></iframe>
+            </div>
+            <div id="app-viewport-facebook" class="fullscreen-embedded-app">
+                <iframe class="app-iframe-container" src="https://www.facebook.com"></iframe>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- DATA DICTIONARY ROUTING LEDGER ---
+        const CREDENTIAL_MATRIX_ROOT = {
+            "yogesh_2888": { pass: "yogesh@22", profile: { name: "Yogesh Rupesh Wahule", dob: "28 OCT 2009", age: 17, qualification: "10th pass", skills: "Artist, hacking, gaming, singing, sports" }},
+            "karan_2888": { pass: "karan@11", profile: { name: "KARAN KUMAR AMIT SINGH", dob: "5 Aug 2009", age: 18, qualification: "10th Pass", skills: "Gaming" }},
+            "samrudhy_2888": { pass: "sam@22", profile: { name: "SAMURUDHY SACHIN MEDHEKAR", dob: "15 DEC 2009", age: 17, qualification: "10th pass", skills: "Artist, singing, Dancing" }},
+            "sanskruty_2888": { pass: "san@22", profile: { name: "SANSKRUTY SACHIN MEDHEKAR", dob: "15 DEC 2009", age: 17, qualification: "10th pass", skills: "Artist, singing, Dancing" }},
+            "vaibhav_2888": { pass: "vaibhav@11", profile: { name: "VAIBHAV RAM TOMPE", dob: "17 DEC 2010", age: 15, qualification: "10th pass", skills: "electrician, gamer, dancer" }}
+        };
+
+        // --- MAHARASHTRA TEXTBOOK MOCKED DATA ROUTER LIBRARY ---
+        const TEXTBOOK_REPOSITORY_ENGINE = {
+            "1-10": [
+                { title: "Class 10 Mathematics Part 1", url: "https://cart.ebalbharati.in/BalBooks/pdfs/1001010001.pdf" },
+                { title: "Class 10 Science and Technology 1", url: "https://cart.ebalbharati.in/BalBooks/pdfs/1001020001.pdf" }
+            ],
+            "science": [
+                { title: "Class 12 Physics", url: "https://cart.ebalbharati.in/BalBooks/pdfs/1201020001.pdf" },
+                { title: "Class 12 Biology", url: "https://cart.ebalbharati.in/BalBooks/pdfs/1201040001.pdf" }
+            ],
+            "commerce": [
+                { title: "Class 12 Book-keeping & Accountancy", url: "https://cart.ebalbharati.in/BalBooks/pdfs/1203010001.pdf" },
+                { title: "Class 12 Economics", url: "https://cart.ebalbharati.in/BalBooks/pdfs/1202050001.pdf" }
+            ],
+            "arts": [
+                { title: "Class 12 History", url: "https://cart.ebalbharati.in/BalBooks/pdfs/1202010001.pdf" },
+                { title: "Class 12 Political Science", url: "https://cart.ebalbharati.in/BalBooks/pdfs/1202020001.pdf" }
+            ]
+        };
+
+        let RUNTIME_VAULT_STORE = [];
+        let ACTIVE_AUTHORIZED_Identity = null;
+        let selectedTierTracker = null;
+
+        // --- BACKGROUND MATRIX ANIMATION REVOLUTION ENGINE ---
+        const canvasObj = document.getElementById('matrix-bg');
+        const canvasCtx = canvasObj.getContext('2d');
+        let width = canvasObj.width = window.innerWidth;
+        let height = canvasObj.height = window.innerHeight;
+        const matrixColumns = Math.floor(width / 20);
+        const columnDrops = Array(matrixColumns).fill(1);
+
+        function drawMatrixStream() {
+            canvasCtx.fillStyle = 'rgba(1, 6, 16, 0.08)';
+            canvasCtx.fillRect(0, 0, width, height);
+            canvasCtx.fillStyle = '#00f0ff';
+            canvasCtx.font = '14px monospace';
+            for (let i = 0; i < columnDrops.length; i++) {
+                const character = String.fromCharCode(Math.floor(Math.random() * 33) + 96);
+                canvasCtx.fillText(character, i * 20, columnDrops[i] * 20);
+                if (columnDrops[i] * 20 > height && Math.random() > 0.98) columnDrops[i] = 0;
+                columnDrops[i]++;
+            }
+        }
+        setInterval(drawMatrixStream, 35);
+
+        // --- SESSION CONTROL HANDSHAKES ---
+        function authenticateDecryptSequence() {
+            const alias = document.getElementById('vault-user').value.trim();
+            const token = document.getElementById('vault-pass').value.trim();
+            const gateError = document.getElementById('gate-error');
+
+            if (CREDENTIAL_MATRIX_ROOT[alias] && CREDENTIAL_MATRIX_ROOT[alias].pass === token) {
+                gateError.style.display = 'none';
+                ACTIVE_AUTHORIZED_Identity = CREDENTIAL_MATRIX_ROOT[alias].profile;
+                
+                // Mount internal payload badge properties
+                document.getElementById('identity-badge').innerText = `🔐 ALIAS: ${alias.toUpperCase()}`;
+                
+                // Write profile contents internally into hidden profile dashboard module
+                document.getElementById('dossier-dump-zone').innerHTML = `
+                    <strong>NAME:</strong> ${ACTIVE_AUTHORIZED_Identity.name}<br>
+                    <strong>TIMELINE ORIGIN:</strong> ${ACTIVE_AUTHORIZED_Identity.dob}<br>
+                    <strong>CHRONO AGE:</strong> ${ACTIVE_AUTHORIZED_Identity.age}<br>
+                    <strong>CLEARANCE CLASS:</strong> ${ACTIVE_AUTHORIZED_Identity.qualification}<br>
+                    <strong>SKILLSETS:</strong> ${ACTIVE_AUTHORIZED_Identity.skills}
+                `;
+
+                // Re-arrange ecosystem frames viewports
+                document.getElementById('system-lockscreen').style.display = 'none';
+                document.getElementById('workstation-workspace').style.display = 'grid';
+                routeNavigationState('home');
+            } else {
+                gateError.style.display = 'block';
+            }
+        }
+
+        function terminateSessionSequence() {
+            ACTIVE_AUTHORIZED_Identity = null;
+            document.getElementById('vault-pass').value = '';
+            document.getElementById('workstation-workspace').style.display = 'none';
+            document.getElementById('system-lockscreen').style.display = 'block';
+            if(gpsWatchId) triggerGeospatialTelemetry();
+        }
+
+        // --- SUB-VIEW ROUTER SYSTEM ENGINE ---
+        function routeNavigationState(stateKey) {
+            // Dismiss full embedded application arrays
+            document.querySelectorAll('.fullscreen-embedded-app').forEach(app => app.style.display = 'none');
+            document.getElementById('core-home-module').style.display = 'none';
+
+            if (stateKey === 'home') {
+                document.getElementById('core-home-module').style.display = 'grid';
+            }
+        }
+
+        function routeApplicationViewport(appKey) {
+            routeNavigationState('app-isolate');
+            document.getElementById(`app-viewport-${appKey}`).style.display = 'flex';
+        }
+
+        function toggleDossierRecord() {
+            const drawer = document.getElementById('dossier-drawer');
+            drawer.classList.toggle('visible');
+        }
+
+        // --- ACADEMIC DATABASE NAVIGATION FUNCTIONS ---
+        function setAcademicTier(tierKey) {
+            selectedTierTracker = tierKey;
+            document.querySelectorAll('.macro-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function executeTextbookQuery() {
+            const queryStr = document.getElementById('textbook-search-input').value.toLowerCase().trim();
+            const fallbackText = document.getElementById('mobile-fallback-text');
+            const iframe = document.getElementById('mobile-stream-iframe');
+
+            if(!selectedTierTracker) return alert("Select an Academic Tier path index first.");
+            if(!queryStr) return alert("Please supply a query keyword parameters.");
+
+            const dataset = TEXTBOOK_REPOSITORY_ENGINE[selectedTierTracker];
+            const matchingBook = dataset.find(book => book.title.toLowerCase().includes(queryStr));
+
+            if(matchingBook) {
+                fallbackText.style.display = 'none';
+                iframe.style.display = 'block';
+                // Routing stream path directly into virtual simulator iframe viewport housing
+                iframe.src = matchingBook.url;
+            } else {
+                iframe.style.display = 'none';
+                fallbackText.style.display = 'block';
+                fallbackText.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--horror-red); font-size:1.5rem; margin-bottom:8px;"></i> MATRIX ERROR: Book matching parameter "${queryStr}" not indexed inside Balbharati node arrays.`;
+            }
+        }
+
+        // --- NON-DESTRUCTIVE BLOCKCHAIN VARIABLE VAULT ---
+        function commitPayloadToLocalMemory() {
+            const title = document.getElementById('secure-note-title').value.trim();
+            const body = document.getElementById('secure-note-body').value.trim();
+            const fileRef = document.getElementById('secure-file-vault').files[0];
+
+            if(!title || !body) return alert("Anchor variables missing configuration parameters.");
+
+            RUNTIME_VAULT_STORE.push({
+                title: title,
+                body: body,
+                file: fileRef ? fileRef.name : "Null Matrix Ptr",
+                time: new Date().toLocaleTimeString()
+            });
+
+            document.getElementById('secure-note-title').value = '';
+            document.getElementById('secure-note-body').value = '';
+            document.getElementById('secure-file-vault').value = '';
+
+            renderVaultElements();
+        }
+
+        function renderVaultElements() {
+            const readout = document.getElementById('vault-readout');
+            readout.innerHTML = RUNTIME_VAULT_STORE.map((node, i) => `
+                <div style="background:rgba(0,0,0,0.5); padding:6px; border:1px solid rgba(0,240,255,0.1); margin-bottom:5px;">
+                    <div style="display:flex; justify-content:space-between; color:var(--matrix-blue); font-weight:bold;">
+                        <span>#${i} ${node.title}</span> <span>${node.time}</span>
+                    </div>
+                    <p style="color:#cbd5e1; margin:2px 0;">${node.body}</p>
+                    <div style="font-size:0.6rem; color:var(--horror-red);">File Attachment: ${node.file}</div>
+                </div>
+            `).join('');
+        }
+
+        // --- GEOSPATIAL HANDSHAKE HARDWARE PROTOCOLS ---
+        let gpsWatchId = null;
+        function triggerGeospatialTelemetry() {
+            const streamDisplay = document.getElementById('geo-coordinates-stream');
+            const btn = document.getElementById('geo-btn');
+
+            if (gpsWatchId !== null) {
+                navigator.geolocation.clearWatch(gpsWatchId);
+                gpsWatchId = null;
+                btn.innerText = "Link Hardware GPS";
+                btn.style.background = "rgba(0,240,255,0.08)";
+                streamDisplay.innerText = "MAP LOG: UNLINKED_";
+            } else {
+                if(navigator.geolocation) {
+                    btn.innerText = "Revoke GPS Link";
+                    btn.style.background = "rgba(255,0,85,0.2)";
+                    streamDisplay.innerText = "AWAITING OS PERMISSIONS...";
+                    
+                    gpsWatchId = navigator.geolocation.watchPosition(
+                        (position) => {
+                            streamDisplay.innerHTML = `LAT_VEC: ${position.coords.latitude.toFixed(5)}<br>LON_VEC: ${position.coords.longitude.toFixed(5)}<br>ALTIMETRY: SECURE LINK`;
+                        },
+                        (err) => {
+                            streamDisplay.innerText = "ERROR: INTERFACE CONNECTION TIMEOUT DENIED.";
+                            if(gpsWatchId) triggerGeospatialTelemetry();
+                        },
+                        { enableHighAccuracy: true }
+                    );
+                } else {
+                    streamDisplay.innerText = "HARDWARE ANTENNA FAULT.";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
